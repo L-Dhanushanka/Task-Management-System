@@ -148,6 +148,8 @@ router.route("/get/:id").get(verifyUser, async (req, res) => {
     try {
         let userID = req.params.id;
 
+        console.log('Received request for user ID:', userID);
+
         const user = await User.findById(userID);
 
         if (!user) {
@@ -178,7 +180,36 @@ router.route('/logout').get(verifyUser, async (req, res) => {
     }
 });
 
-  
+
+router.get('/getCookie', (req, res) => {
+    try {
+        // Retrieve the "access_token" cookie from the request
+        const token = req.cookies.access_token;
+ 
+        if (!token) {
+            return res.status(401).json({ error: "Unauthorized - Token not found" });
+        }
+ 
+        // Verify the JWT token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+ 
+        // You can use the decoded information as needed
+        const userId = decoded.id;
+ 
+        // Include "access_token=" in the response
+        res.status(200).json({
+            status: 200,
+            message: "Cookie value retrieved successfully",
+            data: {
+                userId: userId,
+                token: "access_token=" + token
+            }
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
   
 
 

@@ -77,17 +77,17 @@ router.route("/deleteTask/:id").delete(verifyUser, async (req, res) => {
     try {
         let taskID = req.params.id;
 
-        const userIdFromCookie = req.cookies.access_token; // Assuming the cookie contains user ID
+//  const userIdFromCookie = req.cookies.access_token; // Assuming the cookie contains user ID
         const task = await Task.findById(taskID);
 
         if (!task) {
             return res.status(404).json({ error: "Task not found" });
         }
 
-        // Check if the user associated with the cookie matches the user associated with the task
-        if (task.cookie !== userIdFromCookie) {
-            return res.status(403).json({ error: "Unauthorized: You do not have permission to delete this task" });
-        }
+        // // Check if the user associated with the cookie matches the user associated with the task
+        // if (task.cookie !== userIdFromCookie) {
+        //     return res.status(403).json({ error: "Unauthorized: You do not have permission to delete this task" });
+        // }
 
         const deletedTask = await Task.findByIdAndDelete(taskID);
 
